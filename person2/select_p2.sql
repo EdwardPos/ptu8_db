@@ -28,7 +28,28 @@ SELECT * from company;
 --     GROUP BY name
 --     HAVING count > 3;
 
-SELECT plate FROM car
-    JOIN person ON person.car_id = car.id
-    JOIN company ON person.company_id = company.id
-    WHERE company.name = "Apple";
+-- SELECT plate FROM car
+--     JOIN person ON person.car_id = car.id
+--     JOIN company ON person.company_id = company.id
+--     WHERE company.name = "Apple";
+
+-- isrinkti varda, pavarde, auto gamintoja ir imone tik is
+-- tu imoniu, kuriose dirba iki 3 darbuotoju
+SELECT first_name, last_name, make, name FROM person
+    JOIN car ON car_id = car.id
+    JOIN company ON company_id = company.id
+    WHERE company_id IN (
+        SELECT company.id FROM company
+        JOIN person ON person.company_id = company.id
+        GROUP BY name HAVING count() <=3 ORDER BY name
+    );
+
+SELECT first_name, last_name, make, model, plate FROM person
+    LEFT JOIN car ON car_id = car.id;
+
+INSERT INTO car(make, model, plate)
+    VALUES ("Dethleffs", "A1558", "BGY 555");
+SELECT * FROM car;
+
+SELECT first_name, last_name, make, model FROM car
+    LEFT JOIN person ON car.id = person.car_id;
